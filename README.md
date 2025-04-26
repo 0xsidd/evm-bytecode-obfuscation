@@ -25,6 +25,8 @@ src/
 - **Obfuscation**: Apply various obfuscation techniques to bytecode
 - **Blockchain Integration**: Fetch deployed bytecode from Ethereum mainnet
 
+For an in-depth explanation of the bytecode obfuscation techniques used in this toolkit, see our [research documentation](https://github.com/0xsidd/evm-bytecode-obfuscation/blob/main/research.md).
+
 ## Installation
 
 ```bash
