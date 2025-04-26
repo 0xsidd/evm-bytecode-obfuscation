@@ -1,6 +1,6 @@
 # EVM Bytecode Toolkit
 
-A toolkit for analyzing, manipulating, and obfuscating Ethereum Virtual Machine (EVM) bytecode. This library provides tools for security research, development, and understanding smart contract internals.
+A toolkit for analyzing, manipulating, and obfuscating Ethereum Virtual Machine (EVM) bytecode. This library provides tools for security research, development, and understanding smart contract internals. 
 
 ## Structure
 
