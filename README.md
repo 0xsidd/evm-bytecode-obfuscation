@@ -169,6 +169,45 @@ describe("Contract Testing with Obfuscation", function () {
 5.  **ABI**: Interact with the deployed contract using the *original* contract ABI. The obfuscation techniques described primarily modify control flow and add dead code, but they do not change the function selectors or the external interface (ABI) of the contract.
 6.  **Testing**: Run your existing test suite against the contract deployed with the obfuscated code. If the tests pass, it indicates that the obfuscation likely preserved the original contract's functionality.
 
+## ERC20 Obfuscation Example
+
+The repository includes a complete working example of obfuscating and testing an ERC20 token contract:
+
+```
+contract/
+├── contracts/         # Smart contract source files
+│   └── ERC20.sol      # Sample ERC20 token implementation
+├── test/              # Test files
+│   └── ERC20.test.js  # Tests for the obfuscated ERC20 token
+└── constants/         # Bytecode files
+    └── Bytecodes.js   # Contains original and obfuscated bytecodes
+```
+
+The example demonstrates:
+
+1. **Obfuscation Preservation**: The ERC20 token's functionality is fully preserved after bytecode obfuscation, with all tests passing against the obfuscated deployment.
+
+2. **Deployment Process**: The test implementation combines initCode with obfuscated runtime bytecode:
+   ```javascript
+   // From contract/test/ERC20.test.js
+   const { initCode, obfuscatedRuntimeBytecode } = require("../constants/Bytecodes");
+   const obfuscatedBytecode = initCode + obfuscatedRuntimeBytecode;
+   
+   // Deploy with obfuscated bytecode
+   const tx = await owner.sendTransaction({ data: obfuscatedBytecode });
+   ```
+
+3. **Comprehensive Testing**: The tests verify all ERC20 functionality works with the obfuscated bytecode:
+   - Basic token properties (name, symbol, decimals)
+   - Owner management
+   - Minting tokens
+   - Balance queries
+   - Token transfers
+   - Approvals and allowances
+   - Transfer-from operations
+
+This example provides a practical reference implementation for applying obfuscation to your own smart contracts while ensuring they remain functionally equivalent.
+
 ## License
 
 MIT 
