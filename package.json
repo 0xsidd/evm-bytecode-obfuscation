@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "EVM Bytecode Obfuscation & Analysis Toolkit",
   "main": "src/index.js",
+  "bin": {
+    "evm-obfuscator": "./cli.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node example.js"
+    "start": "node example.js",
+    "cli": "node cli.js"
   },
   "keywords": [
     "ethereum",
@@ -15,7 +19,10 @@
     "analysis"
   ],
   "dependencies": {
-    "ethers": "^6.7.1"
+    "chalk": "^4.0.0",
+    "commander": "^10.0.1",
+    "ethers": "^6.7.1",
+    "inquirer": "^8.0.0"
   },
   "author": "",
   "license": "MIT"

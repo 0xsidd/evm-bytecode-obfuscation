@@ -4,6 +4,7 @@ const {
   findFunctions,
   findPushJumpSeq,
 } = require("../analysis/functionFinder");
+const DeadInstructions = require("../constants/deadInstructions");
 const { addJumpDest, shiftJumpDest } = require("../utils/jumps");
 const { decodeBytecode } = require("../utils/decoder");
 const { modifyInstructionParams } = require("../utils/instructions");
@@ -13,10 +14,13 @@ const { modifyInstructionParams } = require("../utils/instructions");
  * @return {string} Hex string of opcodes that have no effect
  */
 function deadInstructions(originalBytecode) {
-  const bytecode = '60116100095660ff505b50';
-  const shifted = shiftJumpDest(originalBytecode,bytecode);
+  // generate random number between 0 to DeadInstructions.length -1
+  const randomNumber = Math.floor(Math.random() * DeadInstructions.length);
+  // const bytecode = DeadInstructions[randomNumber];
+  const bytecode = DeadInstructions[randomNumber];
+  const shifted = shiftJumpDest(originalBytecode, bytecode);
   // remove starting 0x from shifted if there is one
-  return shifted.startsWith('0x') ? shifted.slice(2) : shifted; // PUSH1 0xff POP - pushes a value and then removes it
+  return shifted.startsWith("0x") ? shifted.slice(2) : shifted; // PUSH1 0xff POP - pushes a value and then removes it
 }
 
 /**
@@ -27,8 +31,6 @@ function deadInstructions(originalBytecode) {
  * @return {string} New hex bytecode with detour and jump back inserted
  */
 function concatBytecode(bytecode, pushPosition, middleInstructions) {
-  console.log('middleInstructions',middleInstructions);
-  
   // 1. Locate the target PUSH instruction
   const decodedOps = decodeBytecode(bytecode);
   const targetOp = decodedOps.find((op) => op.position === pushPosition);
@@ -89,8 +91,6 @@ function obfuscateInternal(
     ? removeLastInstruction(bytecode)
     : bytecode;
 
-  console.log("current", current);
-
   // 2. Find all function selectors or PUSH-JUMP sequences in the bytecode
   const selectors = functionObfuscation
     ? findFunctions(current, complexity)
@@ -104,9 +104,7 @@ function obfuscateInternal(
     const pushPosition = functionObfuscation
       ? sel.followingInstructions[1].position
       : sel.instruction.position;
-  
-      console.log('deadIns',deadIns);
-      
+
     current = concatBytecode(current, pushPosition, deadIns);
   }
 
@@ -130,14 +128,14 @@ function getDeterministicNumber(seed) {
 }
 
 /**
- * Calculate a complexity value between 4-24 from a deterministic number
+ * Calculate a complexity value between 1-6 from a deterministic number
  * @param {number} deterministicNumber - The input number
- * @return {number} A complexity value between 4 and 24
+ * @return {number} A complexity value between 1 and 6
  */
 function calculateComplexity(deterministicNumber) {
-  // Map to 4-24 range using modulo 21 (0-20) + 4
-  const raw = Math.abs(deterministicNumber) % 21;
-  return raw + 4;
+  // Map to 1-6 range using modulo 6 (0-5) + 1
+  const raw = Math.abs(deterministicNumber) % 6;
+  return raw + 1;
 }
 
 /**
@@ -150,20 +148,25 @@ function obfuscateBytecode(seed, bytecode) {
   const deterministicNumber = getDeterministicNumber(seed);
   const baseComplexity = calculateComplexity(deterministicNumber);
 
-  // Generate variants
-  const variants = [-3, -2, -1, 0, 1].map((offset) => {
-    const raw = baseComplexity + offset;
-    return Math.min(Math.max(raw, 4), 24);
-  });
+  // function jump obfuscation
+  const functionJumpObfuscatedBytecode = obfuscateInternal(
+    bytecode,
+    true,
+    baseComplexity,
+    true
+  );
 
-  // Create result object
+  // jump obfuscation
+  const jumpObfuscatedBytecode = obfuscateInternal(
+    functionJumpObfuscatedBytecode,
+    false,
+    baseComplexity,
+    false
+  );
+
   const result = {
-    original: bytecode,
-    variants: variants.map((complexity, index) => ({
-      complexity,
-      // Use function obfuscation for the first 2 variants, jump obfuscation for the rest
-      bytecode: obfuscateInternal(bytecode, true, complexity, index < 2),
-    })),
+    originalBytecode: bytecode,
+    obfuscatedBytecode: jumpObfuscatedBytecode,
   };
 
   // Write to file
