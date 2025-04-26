@@ -1,5 +1,9 @@
 .env
 node_modules
-./contract/artifacts
-./contract/cache
-./contract/node_modules
+# Hardhat/contract folders
+contract/artifacts
+contract/cache
+contract/node_modules
+
+# Local development
+.DS_Store
