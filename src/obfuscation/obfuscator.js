@@ -96,8 +96,6 @@ function obfuscateInternal(
     ? findFunctions(current, 2)
     : findPushJumpSeq(current, complexity);
 
-  console.log("selectors", selectors);
-
   // 3. Get dead (noop) instructions to insert
   const deadIns = deadInstructions(current);
 

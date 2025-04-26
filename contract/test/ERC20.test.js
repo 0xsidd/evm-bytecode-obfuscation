@@ -327,7 +327,6 @@ describe("MyToken", function () {
       );
       const balanceOfCalldata = myToken.interface.encodeFunctionData("balanceOf", [owner.address]);
       expect(await myToken.balanceOf(owner.address)).to.equal(0);
-      console.log("balanceOf calldata:", balanceOfCalldata); // Will output something like 0x70a08231000000000000000000000000{owner address}
       expect(await myToken.balanceOf(otherAccount.address)).to.equal(0);
 
       const mintAmountOwner = ethers.parseUnits("1000", 18);
