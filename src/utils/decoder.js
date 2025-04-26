@@ -1,4 +1,4 @@
-const { OPCODE_SIZES, OPCODE_NAMES } = require('../constants/opcodes');
+const { OPCODE_SIZES, OPCODE_NAMES } = require("../constants/opcodes");
 
 /**
  * Get the name of a PUSH instruction from its opcode
@@ -42,7 +42,7 @@ function decodeBytecode(bytecode) {
       position: pc,
       params: [],
     };
-    
+
     // Extract parameter for PUSH opcodes
     if (opcodeHex >= "0x60" && opcodeHex <= "0x7f") {
       const pushData = instructionBytes.slice(1).join("");
@@ -54,7 +54,7 @@ function decodeBytecode(bytecode) {
         entry.decimalValue = parseInt(hexValue, 16);
       }
     }
-    
+
     ops.push(entry);
     pc += size;
   }
@@ -64,5 +64,5 @@ function decodeBytecode(bytecode) {
 
 module.exports = {
   getPushOpName,
-  decodeBytecode
-}; 
+  decodeBytecode,
+};

@@ -93,8 +93,10 @@ function obfuscateInternal(
 
   // 2. Find all function selectors or PUSH-JUMP sequences in the bytecode
   const selectors = functionObfuscation
-    ? findFunctions(current, complexity)
+    ? findFunctions(current, 2)
     : findPushJumpSeq(current, complexity);
+
+  console.log("selectors", selectors);
 
   // 3. Get dead (noop) instructions to insert
   const deadIns = deadInstructions(current);
@@ -148,17 +150,17 @@ function obfuscateBytecode(seed, bytecode) {
   const deterministicNumber = getDeterministicNumber(seed);
   const baseComplexity = calculateComplexity(deterministicNumber);
 
-  // function jump obfuscation
-  const functionJumpObfuscatedBytecode = obfuscateInternal(
-    bytecode,
-    true,
-    baseComplexity,
-    true
-  );
+  // function jump obfuscation : WIP bug (failing contract tests)
+  // const functionJumpObfuscatedBytecode = obfuscateInternal(
+  //   bytecode,
+  //   false,
+  //   baseComplexity,
+  //   true
+  // );
 
   // jump obfuscation
   const jumpObfuscatedBytecode = obfuscateInternal(
-    functionJumpObfuscatedBytecode,
+    bytecode,
     false,
     baseComplexity,
     false

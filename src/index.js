@@ -36,7 +36,7 @@ async function cli(
 ) {
   let bytecode;
   let result = null;
-  
+
   // For local file location, read the file and get the bytecode from the json file, it will be under the deployedBytecode key
   if (localFileLocation !== "NA") {
     console.log(`Reading bytecode from ${localFileLocation}`);
@@ -44,16 +44,22 @@ async function cli(
     const json = JSON.parse(file);
     bytecode = json.deployedBytecode;
     if (!bytecode) {
-      throw new Error("No deployedBytecode found in the file. Make sure it's a compiled Solidity JSON artifact.");
+      throw new Error(
+        "No deployedBytecode found in the file. Make sure it's a compiled Solidity JSON artifact."
+      );
     }
   }
 
   // If it is from a deployed contract, we need to get the bytecode from the Ethereum blockchain
   if (deployedAddress !== "NA") {
-    console.log(`Fetching bytecode from deployed contract at ${deployedAddress}`);
+    console.log(
+      `Fetching bytecode from deployed contract at ${deployedAddress}`
+    );
     bytecode = await getContractByteCodeFromChain(deployedAddress);
     if (!bytecode || bytecode === "0x") {
-      throw new Error(`No bytecode found at address ${deployedAddress}. Make sure it's a contract address.`);
+      throw new Error(
+        `No bytecode found at address ${deployedAddress}. Make sure it's a contract address.`
+      );
     }
   }
 
@@ -77,7 +83,7 @@ async function cli(
     console.log(`Writing results to ${outputFileName}`);
     fs.writeFileSync(outputFileName, JSON.stringify(result, null, 2));
   }
-  
+
   return result;
 }
 
@@ -97,7 +103,7 @@ module.exports = {
 
   // External Services
   getContractByteCodeFromChain,
-  
+
   // CLI function
-  cli
+  cli,
 };

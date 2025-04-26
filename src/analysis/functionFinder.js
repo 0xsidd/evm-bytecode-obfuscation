@@ -1,4 +1,4 @@
-const { decodeBytecode } = require('../utils/decoder');
+const { decodeBytecode } = require("../utils/decoder");
 
 /**
  * Finds all function selectors by scanning for 'DUP1' + 'PUSH4' patterns.
@@ -133,5 +133,5 @@ function findPushJumpSeq(bytecode, complexity) {
 
 module.exports = {
   findFunctions,
-  findPushJumpSeq
-}; 
+  findPushJumpSeq,
+};
